@@ -15,11 +15,15 @@ import java.util.UUID;
 
 @Service
 public class AuthService {
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+
+    private final ValidationService validator;
 
     @Autowired
-    private ValidationService validator;
+    public AuthService(UserRepo userRepo, ValidationService validator) {
+        this.userRepo = userRepo;
+        this.validator = validator;
+    }
 
     public TokenResponse login(LoginUserRequest request) {
         validator.validate(request);

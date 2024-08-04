@@ -15,8 +15,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
+    private final UserRepo userRepo;
+
     @Autowired
-    private UserRepo userRepo;
+    public UserArgumentResolver(UserRepo userRepo) {
+        this.userRepo = userRepo;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -24,7 +28,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         String token = servletRequest.getHeader("X-API-Token");
         if (token == null) {

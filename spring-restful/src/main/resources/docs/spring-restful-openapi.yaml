@@ -1,0 +1,120 @@
+openapi: "3.1.0"
+info:
+  title: "Spring RESTful API"
+  description: "Spring RESTful API Spec"
+  version: "1.0.0"
+servers:
+  - url: "https://localhost:8080"
+paths:
+  /api/users:
+    post:
+      summary: "POST api/users"
+      operationId: "register"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+  /api/users/current:
+    get:
+      summary: "GET api/users/current"
+      operationId: "get"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    patch:
+      summary: "PATCH api/users/current"
+      operationId: "update"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/auth/login:
+    post:
+      summary: "POST api/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUserRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+  /api/auth/logout:
+    delete:
+      summary: "DELETE api/auth/logout"
+      operationId: "logout"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "string"
+components:
+  schemas:
+    RegisterUserRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        name:
+          type: "string"
+    UserResponse:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        name:
+          type: "string"
+    UpdateUserRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        password:
+          type: "string"
+    LoginUserRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+    TokenResponse:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        expiresIn:
+          type: "integer"
+          format: "int64"
