@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegisterUserRequest {
-    @NotBlank
+    @NotBlank(message = "username is required")
     @Size(max = 100)
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "password is required")
     @Size(max = 100)
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "name is required")
     @Size(max = 100)
     private String name;
 }

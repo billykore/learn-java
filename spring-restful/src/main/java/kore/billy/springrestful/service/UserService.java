@@ -7,6 +7,7 @@ import kore.billy.springrestful.model.UpdateUserRequest;
 import kore.billy.springrestful.model.UserResponse;
 import kore.billy.springrestful.repo.UserRepo;
 import kore.billy.springrestful.security.BCrypt;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,15 @@ import java.util.Objects;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+
+    private final ValidationService validator;
 
     @Autowired
-    private ValidationService validator;
+    public UserService(UserRepo userRepo, ValidationService validator) {
+        this.userRepo = userRepo;
+        this.validator = validator;
+    }
 
     @Transactional
     public void register(RegisterUserRequest request) {
@@ -39,10 +44,7 @@ public class UserService {
     }
 
     public UserResponse get(User user) {
-        return UserResponse.builder()
-                .username(user.getUsername())
-                .name(user.getName())
-                .build();
+        return buildUserResponse(user);
     }
 
     public UserResponse update(User user, UpdateUserRequest request) {
@@ -51,13 +53,16 @@ public class UserService {
         if (Objects.nonNull(request.getName())) {
             user.setName(request.getName());
         }
-
         if (Objects.nonNull(request.getPassword())) {
             user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         }
 
         userRepo.save(user);
 
+        return buildUserResponse(user);
+    }
+
+    private UserResponse buildUserResponse(@NotNull User user) {
         return UserResponse.builder()
                 .name(user.getName())
                 .username(user.getUsername())
